@@ -19,7 +19,6 @@ const GlobalStyle = createGlobalStyle`
 
 html,
 body,
-div,
 span,
 applet,
 object,
@@ -156,23 +155,16 @@ table {
 }
 
 input{
-  font-family: 'Pixelfont';
+  font-family: 'NPSfontBold';
   line-height: 1;
 }
 
-textarea {
-  font-family: 'Pixelfont'
-}
-
 button{
-  font-family: 'Pixelfont';
+  font-family:'NPSfontBold';
 }
 
-select {
-  font-family: 'Pixelfont';
-}
 p {
-  font-family: 'Pixelfont';
+  font-family: 'NPSfontBold';;
 }
 
 `;
