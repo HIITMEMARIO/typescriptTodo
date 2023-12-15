@@ -1,16 +1,16 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { useState } from 'react';
+import styled from 'styled-components';
+import GlobalStyle from './GloabalStyle';
 import Home from './components/Home';
-import GlobalStyle from '../src/GloabalStyle';
+import Cards from './components/Cards';
 
 const App = () => {
-  const queryClient = new QueryClient();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <GlobalStyle />
-      <Home />
-    </QueryClientProvider>
-  );
+  return;
+  <>
+    <GlobalStyle />
+    <Home />
+    <Cards />
+  </>;
 };
 
 export default App;
