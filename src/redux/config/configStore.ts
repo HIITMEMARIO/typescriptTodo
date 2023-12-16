@@ -1,14 +1,13 @@
-import { createStore } from 'redux';
-import { combineReducers } from 'redux';
-import todos from '../modules/todos';
+import todosSlice from '../modules/todos';
+import { configureStore } from '@reduxjs/toolkit';
 
-// 1. create rootReducer with reducers
-const rootReducer = combineReducers({
-  todos,
+const store = configureStore({
+  reducer: {
+    todosSlice: todosSlice,
+  },
 });
 
-// 2. create store
-const store = createStore(rootReducer);
-
-// 3. export
 export default store;
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

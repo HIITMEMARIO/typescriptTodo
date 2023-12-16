@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import { FecthedDataType } from '../types/testType';
+import { newCard } from '../types/testType';
 
 interface CardProps {
   id: string;
   title: string;
   contents: string;
   deleteHandler: (id: string) => void;
-  doneHandler: (item: FecthedDataType) => void;
+  switchHandler: (item: newCard) => void;
   isDone: boolean;
-  item: FecthedDataType;
+  item: newCard;
 }
 
 function Cards({
@@ -16,7 +16,7 @@ function Cards({
   title,
   contents,
   deleteHandler,
-  doneHandler,
+  switchHandler,
   isDone,
   item,
 }: CardProps) {
@@ -28,7 +28,7 @@ function Cards({
       </StContentsBox>
       <StbuttonBox>
         <button onClick={() => deleteHandler(id)}>삭제하기</button>
-        <button onClick={() => doneHandler(item)}>
+        <button onClick={() => switchHandler(item)}>
           {isDone ? '취소' : '완료'}
         </button>
       </StbuttonBox>

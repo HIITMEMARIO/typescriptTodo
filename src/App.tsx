@@ -1,15 +1,21 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { useEffect } from 'react';
+import GlobalStyle from './GloabalStyle';
 import Home from './components/Home';
-import GlobalStyle from '../src/GloabalStyle';
+import { __getTodo } from './redux/modules/todos';
+import { useAppDispatch } from './app/hooks';
 
 const App = () => {
-  const queryClient = new QueryClient();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(__getTodo());
+  }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <GlobalStyle />
       <Home />
-    </QueryClientProvider>
+    </>
   );
 };
 

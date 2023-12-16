@@ -1,46 +1,29 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { addTodo, deleteTodo, getTodos, switchTodo } from '../api/todos';
-import { FecthedDataType } from '../types/testType';
+import { newCard } from '../types/testType';
 import Cards from './Cards';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/config/configStore';
+import { useAppDispatch } from '../app/hooks';
+import { __addTodo, __deleteTodo, __switchTodo } from '../redux/modules/todos';
 
 const Home = () => {
-  const { isLoading, isError, data } = useQuery('todos', getTodos);
+  const [titleValue, setTitleValue] = useState<string>('');
+  const [contentValue, setContentValue] = useState<string>('');
+  const list = useSelector((state: RootState) => state.todosSlice.todos);
 
-  const queryClient = useQueryClient();
-
-  const addTodomutation = useMutation(addTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('todos');
-    },
-  });
-  const deleteTodomutation = useMutation(deleteTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('todos');
-    },
-  });
-
-  const siwtchTodomutation = useMutation(switchTodo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('todos');
-    },
-  });
-
-  const [titleValue, setTitleValue] = useState('');
-  const [detailValue, setDetailValue] = useState('');
-
-  const addCard = () => {
-    const newList: FecthedDataType = {
+  const dispatch = useAppDispatch();
+  const addCardHandler = async () => {
+    const newCard: newCard = {
       id: uuidv4(),
       title: titleValue,
-      contents: detailValue,
+      contents: contentValue,
       isDone: false,
     };
 
-    if (!titleValue || !detailValue) {
+    if (!titleValue || !contentValue) {
       Swal.fire({
         icon: 'error',
         title: '제목과 내용을 써주세요!!',
@@ -53,10 +36,14 @@ const Home = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      addTodomutation.mutate(newList);
+      dispatch(__addTodo(newCard));
+      setContentValue('');
       setTitleValue('');
-      setDetailValue('');
     }
+  };
+
+  const switchHandler = (item: newCard) => {
+    dispatch(__switchTodo(item));
   };
 
   const deleteHandler = (id: string) => {
@@ -76,22 +63,10 @@ const Home = () => {
           text: '내용이 삭제 되었어요!',
           icon: 'success',
         });
-        deleteTodomutation.mutate(id);
+        dispatch(__deleteTodo(id));
       }
     });
   };
-
-  const doneHandler = (item: FecthedDataType) => {
-    siwtchTodomutation.mutate(item);
-  };
-
-  if (isLoading) {
-    return <div>로딩중....</div>;
-  }
-
-  if (isError) {
-    return <div>오류가 발생했어요!</div>;
-  }
 
   return (
     <>
@@ -99,7 +74,7 @@ const Home = () => {
       <StContainer>
         <header>
           <div>
-            &nbsp; 제목 : &nbsp;
+            &nbsp; 제목 :{' '}
             <input
               value={titleValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,55 +82,56 @@ const Home = () => {
               }}
             />
           </div>
-
           <div>
-            &nbsp; 내용 : &nbsp;
+            &nbsp; 내용 :{' '}
             <input
-              value={detailValue}
+              value={contentValue}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setDetailValue(e.target.value);
+                setContentValue(e.target.value);
               }}
             />
+            &nbsp; <button onClick={addCardHandler}>추가하기</button>
           </div>
-          <button onClick={addCard}>추가하기</button>
         </header>
-
         <section>
           <p>🤩 working 🤩</p>
-          {data
-            ?.filter((item: FecthedDataType) => !item.isDone)
-            .map((item: FecthedDataType) => {
-              return (
-                <Cards
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  contents={item.contents}
-                  deleteHandler={deleteHandler}
-                  doneHandler={doneHandler}
-                  isDone={item.isDone}
-                  item={item}
-                />
-              );
-            })}
-
+          <div>
+            {list
+              .filter((item) => !item.isDone)
+              .map((item) => {
+                return (
+                  <Cards
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    contents={item.contents}
+                    deleteHandler={deleteHandler}
+                    switchHandler={switchHandler}
+                    isDone={item.isDone}
+                    item={item}
+                  />
+                );
+              })}
+          </div>
           <p>👌 Done 👌</p>
-          {data
-            ?.filter((item: FecthedDataType) => item.isDone)
-            .map((item: FecthedDataType) => {
-              return (
-                <Cards
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  contents={item.contents}
-                  deleteHandler={deleteHandler}
-                  doneHandler={doneHandler}
-                  isDone={item.isDone}
-                  item={item}
-                />
-              );
-            })}
+          <div>
+            {list
+              .filter((item) => item.isDone)
+              .map((item) => {
+                return (
+                  <Cards
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    contents={item.contents}
+                    deleteHandler={deleteHandler}
+                    switchHandler={switchHandler}
+                    isDone={item.isDone}
+                    item={item}
+                  />
+                );
+              })}
+          </div>
         </section>
       </StContainer>
     </>
