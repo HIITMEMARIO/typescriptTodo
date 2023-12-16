@@ -9,9 +9,8 @@ import { addTodo, deleteTodo, switchTodo } from '../redux/modules/todos';
 import { RootState } from '../redux/config/configStore';
 
 const Home = () => {
-  const [titleValue, setTitleValue] = useState('');
-  const [contentValue, setContentValue] = useState('');
-  // const [list, setList] = useState<newCard[]>([]);
+  const [titleValue, setTitleValue] = useState<string>('');
+  const [contentValue, setContentValue] = useState<string>('');
   const list = useSelector((state: RootState) => state.todosSlice);
 
   const dispatch = useDispatch();
@@ -63,8 +62,7 @@ const Home = () => {
           text: '내용이 삭제 되었어요!',
           icon: 'success',
         });
-        const newCard = list.filter((item) => item.id !== id);
-        dispatch(deleteTodo(newCard));
+        dispatch(deleteTodo(id));
       }
     });
   };
