@@ -37,9 +37,7 @@ function Cards({
 export default Cards;
 
 const StContainer = styled.div`
-  /* width: 100%; */
   height: 200px;
-  /* padding: 100px; */
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -51,7 +49,6 @@ const StContentsBox = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #ffebd8;
-  /* width: 50%; */
   height: 1300px;
   border-radius: 20px;
 

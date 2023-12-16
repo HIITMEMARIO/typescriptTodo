@@ -1,28 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { newCard } from '../../types/listType';
 
-const initialState: newCard[] = [
-  {
-    id: uuidv4(),
-    title: '예시1',
-    contents: 'asdfasdfasdfasdf',
-    isDone: false,
-  },
-];
+interface todosState {
+  todos: newCard[];
+}
+
+const initialState: todosState = {
+  todos: [],
+};
 
 const todosSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state, action) => {
-      return [...state, action.payload];
+    addTodo: (state, action: PayloadAction<newCard>) => {
+      state.todos.push(action.payload);
     },
-    deleteTodo: (state, action) => {
-      return action.payload;
+    deleteTodo: (state, action: PayloadAction<string>) => {
+      state.todos = state.todos.filter((item) => item.id !== action.payload);
     },
-    switchTodo: (state, action) => {
-      return state.map((item) => {
+    switchTodo: (state, action: PayloadAction<string>) => {
+      state.todos = state.todos.map((item) => {
         if (item.id === action.payload) {
           return { ...item, isDone: !item.isDone };
         } else {
