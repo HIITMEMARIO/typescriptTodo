@@ -4,12 +4,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { newCard } from '../types/listType';
 import Cards from './Cards';
 import Swal from 'sweetalert2';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTodo, deleteTodo, switchTodo } from '../redux/modules/todos';
+import { RootState } from '../redux/config/configStore';
 
 const Home = () => {
   const [titleValue, setTitleValue] = useState('');
   const [contentValue, setContentValue] = useState('');
-  const [list, setList] = useState<newCard[]>([]);
+  // const [list, setList] = useState<newCard[]>([]);
+  const list = useSelector((state: RootState) => state.todosSlice);
 
+  const dispatch = useDispatch();
   const addCardHandler = () => {
     const newCard: newCard = {
       id: uuidv4(),
@@ -31,21 +36,14 @@ const Home = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-      setList([...list, newCard]);
+      dispatch(addTodo(newCard));
       setContentValue('');
       setTitleValue('');
     }
   };
 
   const switchHandler = (id: string) => {
-    setList(
-      list.map((item) => {
-        if (item.id === id) {
-          item.isDone = !item.isDone;
-        }
-        return item;
-      })
-    );
+    dispatch(switchTodo(id));
   };
 
   const deleteHandler = (id: string) => {
@@ -66,7 +64,7 @@ const Home = () => {
           icon: 'success',
         });
         const newCard = list.filter((item) => item.id !== id);
-        setList(newCard);
+        dispatch(deleteTodo(newCard));
       }
     });
   };
