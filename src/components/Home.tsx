@@ -7,14 +7,15 @@ import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, deleteTodo, switchTodo } from '../redux/modules/todos';
 import { RootState } from '../redux/config/configStore';
+import axios from 'axios';
 
 const Home = () => {
-  const [titleValue, setTitleValue] = useState('');
-  const [contentValue, setContentValue] = useState('');
-  const list = useSelector((state: RootState) => state.todosSlice.todos);
+  const [titleValue, setTitleValue] = useState<string>('');
+  const [contentValue, setContentValue] = useState<string>('');
+  const list = useSelector((state: RootState) => state.todosSlice);
 
   const dispatch = useDispatch();
-  const addCardHandler = () => {
+  const addCardHandler = async () => {
     const newCard: newCard = {
       id: uuidv4(),
       title: titleValue,
@@ -36,17 +37,21 @@ const Home = () => {
         timer: 1500,
       });
       dispatch(addTodo(newCard));
+      await axios.post(`${process.env.REACT_APP_SERVER_URL}/todos`, newCard);
       setContentValue('');
       setTitleValue('');
     }
   };
 
-  const switchHandler = (id: string) => {
-    dispatch(switchTodo(id));
+  const switchHandler = async (item: newCard) => {
+    dispatch(switchTodo(item));
+    await axios.patch(`${process.env.REACT_APP_SERVER_URL}/todos/${item.id}`, {
+      isDone: !item.isDone,
+    });
   };
 
-  const deleteHandler = (id: string) => {
-    Swal.fire({
+  const deleteHandler = async (id: string) => {
+    await Swal.fire({
       title: '삭제하시겠어요?!',
       text: '삭제하면 영영 돌이킬 수 없습니다. 그래도 하시겠습니까?',
       icon: 'warning',
@@ -62,7 +67,7 @@ const Home = () => {
           text: '내용이 삭제 되었어요!',
           icon: 'success',
         });
-
+        axios.delete(`${process.env.REACT_APP_SERVER_URL}/todos/${id}`);
         dispatch(deleteTodo(id));
       }
     });
@@ -108,6 +113,7 @@ const Home = () => {
                     deleteHandler={deleteHandler}
                     switchHandler={switchHandler}
                     isDone={item.isDone}
+                    item={item}
                   />
                 );
               })}
@@ -126,6 +132,7 @@ const Home = () => {
                     deleteHandler={deleteHandler}
                     switchHandler={switchHandler}
                     isDone={item.isDone}
+                    item={item}
                   />
                 );
               })}

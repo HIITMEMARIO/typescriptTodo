@@ -1,13 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { newCard } from '../types/listType';
 
 interface CardProps {
   id: string;
   title: string;
   contents: string;
   deleteHandler: (id: string) => void;
-  switchHandler: (id: string) => void;
+  switchHandler: (item: newCard) => void;
   isDone: boolean;
+  item: newCard;
 }
 
 function Cards({
@@ -17,6 +19,7 @@ function Cards({
   deleteHandler,
   switchHandler,
   isDone,
+  item,
 }: CardProps) {
   return (
     <StContainer key={id}>
@@ -26,7 +29,7 @@ function Cards({
       </StContentsBox>
       <StbuttonBox>
         <button onClick={() => deleteHandler(id)}>삭제하기</button>
-        <button onClick={() => switchHandler(id)}>
+        <button onClick={() => switchHandler(item)}>
           {isDone ? '취소' : '완료'}
         </button>
       </StbuttonBox>
