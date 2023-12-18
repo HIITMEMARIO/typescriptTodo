@@ -3,11 +3,11 @@
 
 ## lv1~lv5 까지 구현 완료.
 
-## lv1 : prop-drilling만으로 기능 구현
-## lv2 : rtk 사용해 기능 구현
-## lv3 : json-server 사용해 기능 구현
-## lv4 : reudxThunk를 사용해 기능 구현
-## lv5 : react-query를 사용해 기능 구현
+### lv1 : prop-drilling만으로 기능 구현
+### lv2 : rtk 사용해 기능 구현
+### lv3 : json-server 사용해 기능 구현
+### lv4 : reudxThunk를 사용해 기능 구현
+### lv5 : react-query를 사용해 기능 구현
 
 
 
